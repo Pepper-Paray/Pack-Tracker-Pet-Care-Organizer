@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
 function App() {
+  // State for user authentication, used across the app for protected routes
   const [user, setUser] = useState(null);
 
   useEffect(() => {

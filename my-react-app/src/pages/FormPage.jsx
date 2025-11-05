@@ -37,7 +37,7 @@ const FormPage = () => {
     }
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('user_data')
         .insert([formData])
         .select();

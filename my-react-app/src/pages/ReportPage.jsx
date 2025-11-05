@@ -38,7 +38,7 @@ const ReportPage = () => {
   }));
 
   // Reduce example: Calculate totals
-  const totalPets = userData.reduce((acc, curr) => acc + 1, 0);
+  const totalPets = userData.reduce((acc) => acc + 1, 0);
 
   // Filter example: Show only active records
   const activeRecords = userData.filter(item => item.status === 'active');
