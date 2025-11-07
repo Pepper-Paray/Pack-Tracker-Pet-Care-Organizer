@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../config/supabase';
+import { importPetsData, checkExistingData } from '../data/importData';
 
 const ReportPage = () => {
   const [externalData, setExternalData] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
@@ -11,6 +13,14 @@ const ReportPage = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
+      
+      // Check if we need to import external data
+      const count = await checkExistingData();
+      if (count === 0) {
+        await importPetsData();
+      }
+
       // Fetch external data
       const { data: extData, error: extError } = await supabase
         .from('external_data')
@@ -28,6 +38,8 @@ const ReportPage = () => {
       setUserData(usrData);
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,18 +55,37 @@ const ReportPage = () => {
   // Filter example: Show only active records
   const activeRecords = userData.filter(item => item.status === 'active');
 
+  if (loading) {
+    return (
+      <div className="container mt-4">
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
-      <h2>Report Page</h2>
+      <h2>Pet Information Report</h2>
       
       <div className="row">
         <div className="col-md-6">
-          <h3>External Data</h3>
+          <h3>Breed Information</h3>
           <div className="list-group">
             {externalData.map(item => (
               <div key={item.id} className="list-group-item">
-                <h5>{item.name}</h5>
-                <p>{item.description}</p>
+                <h5>{item.breed} ({item.type})</h5>
+                <p><strong>Temperament:</strong> {item.temperament}</p>
+                <p><strong>Size:</strong> {item.size}</p>
+                <p><strong>Lifespan:</strong> {item.lifespan}</p>
+                <div className="d-flex justify-content-between">
+                  <span className="badge bg-primary">Exercise: {item.exercise_needs}</span>
+                  <span className="badge bg-info">Grooming: {item.grooming_needs}</span>
+                  <span className="badge bg-warning">Shedding: {item.shedding}</span>
+                </div>
               </div>
             ))}
           </div>

@@ -13,9 +13,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
-  will-change: filter;
-  transition: filter 300ms;
+.header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  text-align: center;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
