@@ -1,17 +1,28 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
 .App {
   min-height: 100vh;
   background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  flex: 1;
 }
 
 .card {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
 }
 .header {
   background-color: #282c34;

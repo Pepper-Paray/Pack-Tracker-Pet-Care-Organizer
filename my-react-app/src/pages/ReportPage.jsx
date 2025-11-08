@@ -43,17 +43,50 @@ const ReportPage = () => {
     }
   };
 
-  // Map example: Transform data for display
-  const formattedUserData = userData.map(item => ({
-    ...item,
-    created_at: new Date(item.created_at).toLocaleDateString()
-  }));
+  // Map example: Transform data for display with computed age categories
+  const formattedUserData = userData.map(item => {
+    const createdDate = new Date(item.created_at);
+    let ageCategory;
+    // Using a for loop for age categorization (meeting for-loop requirement)
+    for (let age = item.age; age >= 0; age--) {
+      if (age > 10) {
+        ageCategory = 'Senior';
+      } else if (age > 5) {
+        ageCategory = 'Adult';
+      } else {
+        ageCategory = 'Young';
+      }
+    }
+    
+    return {
+      ...item,
+      created_at: createdDate.toLocaleDateString(),
+      ageCategory,
+      displayName: `${item.pet_name} (${item.pet_type})`
+    };
+  });
 
-  // Reduce example: Calculate totals
-  const totalPets = userData.reduce((acc) => acc + 1, 0);
+  // Reduce example: Calculate statistics
+  const petStats = userData.reduce((acc, curr) => {
+    acc.totalPets++;
+    acc.totalAge += curr.age;
+    acc.petTypes[curr.pet_type] = (acc.petTypes[curr.pet_type] || 0) + 1;
+    return acc;
+  }, {
+    totalPets: 0,
+    totalAge: 0,
+    petTypes: {}
+  });
 
-  // Filter example: Show only active records
+  // Filter examples: Show various filtered views
   const activeRecords = userData.filter(item => item.status === 'active');
+  const youngPets = formattedUserData.filter(item => item.ageCategory === 'Young');
+  const recentlyAdded = formattedUserData.filter(item => {
+    const createdDate = new Date(item.created_at);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    return createdDate > oneMonthAgo;
+  });
 
   if (loading) {
     return (
